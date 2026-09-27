@@ -1,0 +1,13 @@
+# Configuración local de IntelliJ IDEA
+.idea/
+*.iml
+
+# Archivos generados al compilar
+out/
+target/
+build/
+*.class
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
