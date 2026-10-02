@@ -39,7 +39,11 @@ public class Administrador {
         this.contrasenia = contrasenia;
     }
 
-    //public String toString()
+    public String toString() {
+        return "Administrador:" +
+                "\nCorreo: " + correoElectronico +
+                "\nNombre de usuario: " + nombreUsuario;
+    }
 
     //MÉTODOS
     public String cambiarContrasenia(String contraseniaActual, String nuevaContrasenia, String confirmacion) {

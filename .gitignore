@@ -11,3 +11,7 @@ build/
 # Archivos del sistema operativo
 .DS_Store
 Thumbs.db
+
+# Draw.io backup files
+*.drawio.bkp
+~$*.drawio*

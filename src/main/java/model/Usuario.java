@@ -111,7 +111,16 @@ public class Usuario {
         this.listasReproduccion = listasReproduccion;
     }
 
-    //public String toString()
+    public String toString() {
+        return "Usuario:" +
+                "\nCorreo: " + correoElectronico +
+                "\nNombre de usuario: " + nombreUsuario +
+                "\nNombre completo: " + nombreCompleto +
+                "\nFecha de nacimiento: " + fechaNacimiento +
+                "\nNacionalidad: " + nacionalidad +
+                "\nCédula: " + cedula +
+                "\nSaldo: $" + saldo;
+    }
 
     //MÉTODOS
     public boolean esMayorDeEdad() {
