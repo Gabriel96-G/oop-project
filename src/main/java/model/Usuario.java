@@ -17,7 +17,7 @@ public class Usuario {
     private String cedula;
     private BigDecimal saldo = new BigDecimal("4.99");
     private List<Cancion> cancionesCompradas = new ArrayList<>();
-    private List<ListaReproduccion> listasReproduccion = new ArrayList<>();
+
 
     //CONSTRUCTOR
     public Usuario(String correoElectronico, String nombreUsuario, String contrasenia, String nombreCompleto, LocalDate fechaNacimiento, String nacionalidad, String cedula) {
@@ -103,13 +103,9 @@ public class Usuario {
         this.cancionesCompradas = cancionesCompradas;
     }
 
-    public List<ListaReproduccion> getListasReproduccion() {
-        return listasReproduccion;
-    }
-
-    public void setListasReproduccion(List<ListaReproduccion> listasReproduccion) {
-        this.listasReproduccion = listasReproduccion;
-    }
+    // public boolean tieneCancion(Cancion cancion)
+    // public String comprarCancion(Cancion cancion)
+    // public String agregarListaReproduccion(ListaReproduccion lista)
 
     public String toString() {
         return "Usuario:" +

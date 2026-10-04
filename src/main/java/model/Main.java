@@ -1,5 +1,6 @@
 package model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -42,20 +43,40 @@ public class Main {
                 "Admin123!"
         );
 
-        // 4. Registro en las listas
+        // 4. Construcción de canción
+        Cancion cancion1 = new Cancion(
+                "Bohemian Rhapsody",
+                "Rock",
+                "Queen",
+                "Freddie Mercury",
+                LocalDate.of(1975, 10, 31),
+                "A Night at the Opera",
+                "bohemian_rhapsody.jpg",
+                new BigDecimal("1.99")
+        );
+
+        // PRUEBA 1: Registrar objetos en las listas
         aplicacion.registrarUsuario(usuario1);
         aplicacion.registrarUsuario(usuario2);
-
         aplicacion.registrarAdministrador(administrador1);
+        aplicacion.registrarCancion(cancion1);
 
-        // 5. Mostrar las listas
+        // Mostrar las listas
         System.out.println("===== USUARIOS =====");
         aplicacion.mostrarUsuarios();
 
         System.out.println("\n===== ADMINISTRADORES =====");
         aplicacion.mostrarAdministradores();
 
-        // 6. Mostrar la aplicación
+        System.out.println("\n===== CANCIONES =====");
+        aplicacion.mostrarCanciones();
+
+        // PRUEBA 2: Calificar una canción
+        System.out.println("\n===== PRUEBA DE CALIFICACIÓN =====");
+        System.out.println(cancion1.calificar(4.5));
+        System.out.println(cancion1);
+
+        // Mostrar aplicación
         System.out.println("\n===== APLICACIÓN =====");
         System.out.println(aplicacion);
     }
