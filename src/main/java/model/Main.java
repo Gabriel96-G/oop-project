@@ -20,26 +20,31 @@ public class Main {
                 "juan@gmail.com",
                 "juan123",
                 "Clave123!",
+                "Clave123!",
                 "Juan Pérez",
                 LocalDate.of(2000, 5, 10),
                 "Costarricense",
-                "123456789"
+                "123456789",
+                null
         );
 
         Usuario usuario2 = new Usuario(
                 "maria@gmail.com",
                 "maria456",
                 "Maria123!",
+                "Maria123!",
                 "María Rodríguez",
                 LocalDate.of(1998, 8, 20),
                 "Costarricense",
-                "987654321"
+                "987654321",
+                null
         );
 
         // 3. Construcción de administrador
         Administrador administrador1 = new Administrador(
                 "admin@gmail.com",
                 "admin1",
+                "Admin123!",
                 "Admin123!"
         );
 

@@ -4,55 +4,35 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
-public class Usuario {
+public class Usuario extends Cuenta {
 
-    //ATRIBUTOS
-    private String correoElectronico;
-    private String nombreUsuario;
-    private String contrasenia;
+    // ATRIBUTOS
+    private static final List<String> NACIONALIDADES_DISPONIBLES = Collections.unmodifiableList(Arrays.asList("Costarricense", "Panameña", "Nicaragüense", "Guatemalteca", "Salvadoreña", "Hondureña"));
     private String nombreCompleto;
     private LocalDate fechaNacimiento;
     private String nacionalidad;
     private String cedula;
+    private String avatar = "recursos/imagenes/avatar-predeterminado.png";
     private BigDecimal saldo = new BigDecimal("4.99");
     private List<Cancion> cancionesCompradas = new ArrayList<>();
 
-
-    //CONSTRUCTOR
-    public Usuario(String correoElectronico, String nombreUsuario, String contrasenia, String nombreCompleto, LocalDate fechaNacimiento, String nacionalidad, String cedula) {
-        this.correoElectronico = correoElectronico;
-        this.nombreUsuario = nombreUsuario;
-        this.contrasenia = contrasenia;
-        this.nombreCompleto = nombreCompleto;
-        this.fechaNacimiento = fechaNacimiento;
-        this.nacionalidad = nacionalidad;
-        this.cedula = cedula;
+    // CONSTRUCTOR
+    public Usuario(String correo, String usuario, String clave, String confirmacion, String nombre, LocalDate nacimiento, String nacionalidad, String cedula, String avatar) {
+        super(correo, usuario, clave);
+        validarContrasenia(clave, confirmacion);
+        this.nombreCompleto = requerido(nombre, "nombre completo");
+        setFechaNacimientoValidada(nacimiento);
+        this.nacionalidad = validarNacionalidad(nacionalidad);
+        this.cedula = requerido(cedula, "cédula");
+        setAvatar(avatar);
     }
 
-    //GETTERS Y SETTERS
-    public String getCorreoElectronico() {
-        return correoElectronico;
-    }
-
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
-    }
-
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+    // GETTERS Y SETTERS
+    public static List<String> getNacionalidadesDisponibles() {
+        return NACIONALIDADES_DISPONIBLES;
     }
 
     public String getNombreCompleto() {
@@ -60,7 +40,7 @@ public class Usuario {
     }
 
     public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+        this.nombreCompleto = requerido(nombreCompleto, "nombre completo");
     }
 
     public LocalDate getFechaNacimiento() {
@@ -68,7 +48,7 @@ public class Usuario {
     }
 
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+        setFechaNacimientoValidada(fechaNacimiento);
     }
 
     public String getNacionalidad() {
@@ -76,7 +56,7 @@ public class Usuario {
     }
 
     public void setNacionalidad(String nacionalidad) {
-        this.nacionalidad = nacionalidad;
+        this.nacionalidad = validarNacionalidad(nacionalidad);
     }
 
     public String getCedula() {
@@ -84,7 +64,7 @@ public class Usuario {
     }
 
     public void setCedula(String cedula) {
-        this.cedula = cedula;
+        this.cedula = requerido(cedula, "cédula");
     }
 
     public BigDecimal getSaldo() {
@@ -92,25 +72,19 @@ public class Usuario {
     }
 
     public void setSaldo(BigDecimal saldo) {
+        validarDinero(saldo);
         this.saldo = saldo;
     }
 
     public List<Cancion> getCancionesCompradas() {
-        return cancionesCompradas;
+        return java.util.Collections.unmodifiableList(new ArrayList<>(cancionesCompradas));
     }
 
-    public void setCancionesCompradas(List<Cancion> cancionesCompradas) {
-        this.cancionesCompradas = cancionesCompradas;
-    }
-
-    // public boolean tieneCancion(Cancion cancion)
-    // public String comprarCancion(Cancion cancion)
-    // public String agregarListaReproduccion(ListaReproduccion lista)
-
+    // TOSTRING
     public String toString() {
         return "Usuario:" +
-                "\nCorreo: " + correoElectronico +
-                "\nNombre de usuario: " + nombreUsuario +
+                "\nCorreo: " + getCorreoElectronico() +
+                "\nNombre de usuario: " + getNombreUsuario() +
                 "\nNombre completo: " + nombreCompleto +
                 "\nFecha de nacimiento: " + fechaNacimiento +
                 "\nNacionalidad: " + nacionalidad +
@@ -118,7 +92,17 @@ public class Usuario {
                 "\nSaldo: $" + saldo;
     }
 
-    //MÉTODOS
+    // MÉTODOS
+    private static String validarNacionalidad(String valor) {
+        String limpio = requerido(valor, "nacionalidad");
+        for (String nacionalidad : NACIONALIDADES_DISPONIBLES) {
+            if (nacionalidad.equalsIgnoreCase(limpio)) {
+                return nacionalidad;
+            }
+        }
+        throw new IllegalArgumentException("Nacionalidad fuera de los territorios disponibles");
+    }
+
     public boolean esMayorDeEdad() {
         if (fechaNacimiento == null) {
             return false;
@@ -130,66 +114,80 @@ public class Usuario {
         return true;
     }
 
-    public String cambiarContrasenia(String contraseniaActual, String nuevaContrasenia, String confirmacion) {
-        if (contraseniaActual == null || nuevaContrasenia == null || confirmacion == null) {
-            return "Debe completar todos los campos";
-        }
-        if (!contraseniaActual.equals(this.contrasenia)) {
-            return "La contraseña actual es incorrecta";
-        }
-        if (nuevaContrasenia.equals(this.contrasenia)) {
-            return "La contraseña tiene que ser diferente";
-        }
-        if (!nuevaContrasenia.equals(confirmacion)) {
-            return "La nueva contraseña y su confirmación no coinciden";
-        }
-        if (nuevaContrasenia.length() < 8 || nuevaContrasenia.length() > 12) {
-            return "La contraseña debe tener entre 8 y 12 caracteres";
-        }
-
-        boolean tieneMayuscula = false;
-        boolean tieneMinuscula = false;
-        boolean tieneNumero = false;
-        boolean tieneEspecial = false;
-
-        for (int i = 0; i < nuevaContrasenia.length(); i++) {
-            char caracter = nuevaContrasenia.charAt(i);
-
-            if (Character.isUpperCase(caracter)) {
-                tieneMayuscula = true;
-            } else if (Character.isLowerCase(caracter)) {
-                tieneMinuscula = true;
-            } else if (Character.isDigit(caracter)) {
-                tieneNumero = true;
-            } else if (!Character.isLetterOrDigit(caracter)
-                    && !Character.isWhitespace(caracter)) {
-                tieneEspecial = true;
-            }
-        }
-        if (!tieneMayuscula || !tieneMinuscula || !tieneNumero || !tieneEspecial) {
-            return "La contraseña debe incluir mayúscula, minúscula, número y carácter especial";
-        }
-        this.contrasenia = nuevaContrasenia;
-        return "La contraseña se cambió correctamente";
-    }
-
     public String recargarSaldo(BigDecimal monto) {
         if (monto == null) {
-            return "Debe incluir monto";
+            throw new IllegalArgumentException("Debe incluir monto");
         }
         if (monto.compareTo(BigDecimal.ZERO) <= 0) {
-            return "El monto debe ser mayor que 0";
+            throw new IllegalArgumentException("El monto debe ser mayor que 0");
         }
+        validarDinero(monto);
         this.saldo = this.saldo.add(monto);
         return "El saldo fue agregado correctamente";
     }
 
-    // public boolean tieneCancion(Cancion cancion)
-    // public String comprarCancion(Cancion cancion)
-    // public String agregarListaReproduccion(ListaReproduccion lista)
+    // GETTERS Y SETTERS
+    @Override
+    public String getRol() {
+        return "USUARIO";
+    }
 
+    public String getAvatar() {
+        return avatar;
+    }
 
+    public void setAvatar(String valor) {
+        avatar = valor == null || valor.trim().isEmpty()
+                ? "recursos/imagenes/avatar.png"
+                : valor.trim();
+    }
 
+    // MÉTODOS
+    private void setFechaNacimientoValidada(LocalDate fecha) {
+        if (fecha == null || fecha.isAfter(LocalDate.now().minusYears(18)))
+            throw new IllegalArgumentException("Debe ser mayor de edad");
+        fechaNacimiento = fecha;
+    }
 
+    private static void validarDinero(BigDecimal monto) {
+        if (monto == null) {
+            throw new IllegalArgumentException("Debe indicar un monto");
+        }
 
+        if (monto.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("El monto no puede ser negativo");
+        }
+
+        if (monto.stripTrailingZeros().scale() > 2) {
+            throw new IllegalArgumentException("Use un máximo de dos decimales");
+        }
+    }
+
+    public boolean tieneCancion(Cancion cancion) {
+        if (cancion == null)
+            throw new IllegalArgumentException("Canción requerida");
+        for (Cancion comprada : cancionesCompradas)
+            if (comprada.equals(cancion))
+                return true;
+        return false;
+    }
+
+    public void comprarCancion(Cancion cancion) {
+        if (tieneCancion(cancion))
+            throw new IllegalStateException("La canción ya fue comprada");
+        BigDecimal precio = cancion.getPrecio();
+        validarDinero(precio);
+        if (saldo.compareTo(precio) < 0)
+            throw new IllegalStateException("Saldo insuficiente");
+        cancionesCompradas.add(cancion);
+        saldo = saldo.subtract(precio);
+    }
+
+    public void calificarCancion(Cancion cancion, double nota) {
+        if (!tieneCancion(cancion)) {
+            throw new IllegalStateException("Primero debe comprar la canción");
+        }
+
+        cancion.calificar(nota);
+    }
 }
