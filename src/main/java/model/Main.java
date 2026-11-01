@@ -84,5 +84,71 @@ public class Main {
         // Mostrar aplicación
         System.out.println("\n===== APLICACIÓN =====");
         System.out.println(aplicacion);
+
+        // PRUEBA 3: Reproducir
+        System.out.println("\n===== PRUEBA DE REPRODUCCIÓN =====");
+        System.out.println(cancion1.reproducir());
+        System.out.println(cancion1.detener());
+
+        // PRUEBA 4: Comprar canciones y calificar
+        System.out.println("\n===== PRUEBA DE COMPRA Y CALIFICACIÓN =====");
+        Cancion cancion2 = new Cancion(
+                "Imagine",
+                "Pop",
+                "John Lennon",
+                "John Lennon",
+                LocalDate.of(1971, 9, 9),
+                null,   // sin álbum
+                null,   // carátula predeterminada
+                new BigDecimal("0.99")
+        );
+        aplicacion.registrarCancion(cancion2);
+
+        usuario1.comprarCancion(cancion1);
+        usuario1.comprarCancion(cancion2);
+        usuario1.calificarCancion(cancion1, 4.0);
+        usuario1.calificarCancion(cancion2, 3.0);
+        System.out.println("Saldo de " + usuario1.getNombreUsuario() + ": $" + usuario1.getSaldo());
+
+        try {
+            usuario2.calificarCancion(cancion1, 5.0); // usuario2 no la ha comprado
+        } catch (IllegalStateException e) {
+            System.out.println("Error esperado: " + e.getMessage());
+        }
+
+        try {
+            usuario1.calificarCancion(cancion1, 9.0); // nota fuera de rango
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error esperado: " + e.getMessage());
+        }
+
+        // PRUEBA 5: Listas de reproducción
+        System.out.println("\n===== PRUEBA DE LISTAS DE REPRODUCCIÓN =====");
+        ListaReproduccion lista1 = usuario1.crearListaReproduccion("Mis favoritas");
+        usuario1.agregarCancionALista(lista1, cancion1);
+        usuario1.agregarCancionALista(lista1, cancion2);
+        System.out.println(lista1);
+
+        try {
+            usuario1.agregarCancionALista(lista1, cancion1); // repetida
+        } catch (IllegalStateException e) {
+            System.out.println("Error esperado: " + e.getMessage());
+        }
+
+        try {
+            usuario2.agregarCancionALista(lista1, cancion1); // lista de otro usuario
+        } catch (IllegalStateException e) {
+            System.out.println("Error esperado: " + e.getMessage());
+        }
+
+        // PRUEBA 6: Polimorfismo - canción y lista tratadas como Reproducible
+        System.out.println("\n===== PRUEBA DE POLIMORFISMO =====");
+        ArrayList<Reproducible> cola = new ArrayList<>();
+        cola.add(cancion1);
+        cola.add(lista1);
+        for (Reproducible item : cola) {
+            System.out.println(item.reproducir());
+        }
+
     }
 }

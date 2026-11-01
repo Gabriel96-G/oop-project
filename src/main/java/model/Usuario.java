@@ -18,6 +18,7 @@ public class Usuario extends Cuenta {
     private String avatar = "recursos/imagenes/avatar-predeterminado.png";
     private BigDecimal saldo = new BigDecimal("4.99");
     private List<Cancion> cancionesCompradas = new ArrayList<>();
+    private List<ListaReproduccion> listasReproduccion = new ArrayList<>();
 
     // CONSTRUCTOR
     public Usuario(String correo, String usuario, String clave, String confirmacion, String nombre, LocalDate nacimiento, String nacionalidad, String cedula, String avatar) {
@@ -78,6 +79,11 @@ public class Usuario extends Cuenta {
 
     public List<Cancion> getCancionesCompradas() {
         return java.util.Collections.unmodifiableList(new ArrayList<>(cancionesCompradas));
+    }
+
+    // ListaReproduccion
+    public List<ListaReproduccion> getListasReproduccion(){
+        return java.util.Collections.unmodifiableList(new ArrayList<>(listasReproduccion));
     }
 
     // TOSTRING
@@ -189,5 +195,30 @@ public class Usuario extends Cuenta {
         }
 
         cancion.calificar(nota);
+    }
+
+    // Crear lista de reproducción
+    public ListaReproduccion crearListaReproduccion(String nombre){
+        ListaReproduccion lista = new ListaReproduccion(nombre);
+        listasReproduccion.add(lista);
+        return lista;
+    }
+
+    // Agregar canción a la lista
+    public void agregarCancionALista(ListaReproduccion lista, Cancion cancion){
+        boolean esMia = false; // La lista es de este usuario?
+        for (ListaReproduccion propia : listasReproduccion){
+            if (propia == lista){ // Compara para saber que es exactamente el mismo objeto
+                esMia = true;
+            }
+        }
+        if (!esMia){
+            throw new IllegalStateException("La lista no pertenece a este usuario");
+        }
+
+        if (!tieneCancion(cancion)){ // si ya compró la canción
+            throw new IllegalStateException("Primero debe comprar la canción");
+        }
+        lista.agregarCancion(cancion); // agregar canción
     }
 }

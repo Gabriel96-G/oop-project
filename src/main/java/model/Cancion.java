@@ -3,7 +3,7 @@ package model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Cancion {
+public class Cancion implements Reproducible{
 
     // Atributos (10)
     private String nombre;
@@ -16,20 +16,24 @@ public class Cancion {
     private double calificacion;
     private int cantidadCalificaciones;
     private BigDecimal precio;
+    private static int contador = 1; // compartido para las canciones - static = pertenece a la clase, se comparte.
+    private int id; // propio de cada canción
 
     // Métodos
     // Constructor completo
     public Cancion (String nombre, String genero, String artista, String compositor, LocalDate fechaLanzamiento, String album, String caratula, BigDecimal precio){
-        this.nombre = nombre;
+        setNombre(nombre);
         this.genero = genero;
-        this.artista = artista;
+        setArtista(artista);
         this.compositor = compositor;
         this.fechaLanzamiento = fechaLanzamiento;
         this.album = album;
         this.caratula = caratula;
         this.calificacion = 0.0; // no es un parametro que se recibe pero si una asignación. - Sin calificación porque es un objeto recién creado.
         this.cantidadCalificaciones = 0;  // no es un parametro que se recibe pero si una asignación. - Misma situación.
-        this.precio = precio;
+        setPrecio(precio);
+        this.id = contador;
+        contador++; // usa el contador para dar un id único y luego lo sube.
     }
 
     // Getters - Devuelve información
@@ -73,9 +77,16 @@ public class Cancion {
         return precio;
     }
 
+    public int getId() {
+        return id;
+    }
+
     // Setters - Agrega valor y lo cambia
     public void setNombre(String nombre){
-        this.nombre = nombre;
+        if (nombre == null || nombre.trim().isEmpty()){
+            throw new IllegalArgumentException("Debe indicar el nombre de la canción");
+        }
+        this.nombre = nombre.trim();
     }
 
     public void setGenero(String genero){
@@ -83,6 +94,9 @@ public class Cancion {
     }
 
     public void setArtista(String artista){
+        if (artista == null || artista.trim().isEmpty()){
+            throw new IllegalArgumentException("Debe indicar el nombre del artista");
+        }
         this.artista = artista;
     }
 
@@ -103,20 +117,34 @@ public class Cancion {
     }
 
     public void setCalificacion(double calificacion){
+        if (calificacion < 0.0 || calificacion > 5.0) {
+            throw new IllegalArgumentException("La calificación debe estar entre 0.0 y 5.0");
+        }
         this.calificacion = calificacion;
     }
+
 
     public void setCantidadCalificaciones(int cantidadCalificaciones){
         this.cantidadCalificaciones = cantidadCalificaciones;
     }
 
     public void setPrecio(BigDecimal precio){
+        if (precio == null){
+            throw new IllegalArgumentException("Debe indicar un precio");
+        }
+        if (precio.compareTo(BigDecimal.ZERO) < 0){
+            throw new IllegalArgumentException("El precio no puede ser negativo");
+        }
+        if (precio.stripTrailingZeros().scale() > 2){
+            throw new IllegalArgumentException("Use un máximo de dos decimales");
+        }
         this.precio = precio;
     }
 
     // toString()
     public String toString() {
-        return "Nombre Canción: " + nombre +
+        return "ID: " + id +
+                "\nNombre Canción: " + nombre +
                 "\nGénero: " + genero +
                 "\nArtista: " + artista +
                 "\nCompositor: " + compositor +
@@ -136,7 +164,8 @@ public class Cancion {
     // Método calificar
     public String calificar (double nota){
         if (nota < 0.0 || nota > 5.0){
-            return "La calificación debe estar entre 0.0 y 5.0";
+            throw new IllegalArgumentException("La calificación debe estar entre 0.0 y 5.0");
+            // throw corta el método
         }
 
         double total = calificacion * cantidadCalificaciones; // toma la suma de todas las calificaciones anteriores
@@ -147,5 +176,16 @@ public class Cancion {
 
         return "La calificación ha sido registrada con éxito";
     }
+
+    @Override
+    public String reproducir(){
+        return "La canción " + nombre + " se está reproduciendo";
+    }
+
+    @Override
+    public String detener(){
+        return "La canción " + nombre + " ha sido detenida";
+    }
+
 
 }
