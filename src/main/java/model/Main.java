@@ -3,6 +3,7 @@ package model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import vista.Menu;
 
 public class Main {
 
@@ -184,6 +185,10 @@ public class Main {
         for (Reproducible item : cola) {
             System.out.println(item.reproducir());
         }
+
+        // INICIAR EL MENÚ INTERACTIVO
+        Menu menu = new Menu(aplicacion);
+        menu.ejecutar();
 
     }
 }
