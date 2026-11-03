@@ -44,6 +44,51 @@ public class Aplicacion {
         this.canciones = canciones;
     }
 
+    // MÉTODO PARA INICIAR SESIÓN
+    public Cuenta iniciarSesion(String nombreUsuario, String contrasenia) {
+
+        if (nombreUsuario == null || contrasenia == null) {
+            throw new IllegalArgumentException(
+                    "Debe ingresar el usuario y la contraseña"
+            );
+        }
+
+        // Buscar entre los administradores
+        for (Administrador administrador : administradores) {
+
+            if (administrador.autenticar(nombreUsuario, contrasenia)) {
+                return administrador;
+            }
+        }
+
+        // Buscar entre los usuarios
+        for (Usuario usuario : usuarios) {
+
+            if (usuario.autenticar(nombreUsuario, contrasenia)) {
+                return usuario;
+            }
+        }
+
+        throw new IllegalStateException(
+                "Nombre de usuario o contraseña incorrectos"
+        );
+    }
+
+    // MÉTODO PARA BUSCAR UNA CANCIÓN POR ID
+    public Cancion buscarCancionPorId(int id) {
+
+        for (Cancion cancion : canciones) {
+
+            if (cancion.getId() == id) {
+                return cancion;
+            }
+        }
+
+        throw new IllegalArgumentException(
+                "No existe una canción con el ID indicado"
+        );
+    }
+
     // MÉTODOS PARA REGISTRAR OBJETOS
     public void registrarUsuario(Usuario usuario) {
         usuarios.add(usuario);

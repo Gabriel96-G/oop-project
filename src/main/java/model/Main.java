@@ -66,6 +66,41 @@ public class Main {
         aplicacion.registrarAdministrador(administrador1);
         aplicacion.registrarCancion(cancion1);
 
+        // PRUEBA DE BÚSQUEDA DE CANCIÓN POR ID
+        System.out.println("\n===== PRUEBA DE BÚSQUEDA POR ID =====");
+
+        Cancion cancionEncontrada = aplicacion.buscarCancionPorId(cancion1.getId());
+
+        System.out.println("Canción encontrada: " + cancionEncontrada.getNombre());
+        System.out.println("ID: " + cancionEncontrada.getId());
+
+// PRUEBA CON ID INEXISTENTE
+        try {
+            aplicacion.buscarCancionPorId(99);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error esperado: " + e.getMessage());
+        }
+
+        // PRUEBA DE INICIO DE SESIÓN
+        System.out.println("\n===== PRUEBA DE INICIO DE SESIÓN =====");
+
+        Cuenta sesionUsuario = aplicacion.iniciarSesion("juan123", "Clave123!");
+        System.out.println("Usuario autenticado: " + sesionUsuario.getNombreUsuario());
+        System.out.println("Rol: " + sesionUsuario.getRol());
+
+        Cuenta sesionAdministrador = aplicacion.iniciarSesion("admin1", "Admin123!");
+        System.out.println("Administrador autenticado: " + sesionAdministrador.getNombreUsuario());
+        System.out.println("Rol: " + sesionAdministrador.getRol());
+
+        // PRUEBA DE INICIO DE SESIÓN INCORRECTO
+        System.out.println("\n===== PRUEBA DE CONTRASEÑA INCORRECTA =====");
+
+        try {
+            aplicacion.iniciarSesion("juan123", "ClaveIncorrecta");
+        } catch (IllegalStateException e) {
+            System.out.println("Error esperado: " + e.getMessage());
+        }
+
         // Mostrar las listas
         System.out.println("===== USUARIOS =====");
         aplicacion.mostrarUsuarios();
