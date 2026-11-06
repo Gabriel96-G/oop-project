@@ -10,7 +10,7 @@ import java.util.Collections;
 public class Usuario extends Cuenta {
 
     // ATRIBUTOS
-    private static final List<String> NACIONALIDADES_DISPONIBLES = Collections.unmodifiableList(Arrays.asList("Costarricense", "Panameña", "Nicaragüense", "Guatemalteca", "Salvadoreña", "Hondureña"));
+    private static final List<String> NACIONALIDADES_DISPONIBLES = Collections.unmodifiableList(Arrays.asList("Costarricense", "Panameña", "Panameño", "Nicaragüense", "Guatemalteca","Guatemalteco", "Salvadoreña","Salvadoreño", "Hondureña", "Hondureño"));
     private String nombreCompleto;
     private LocalDate fechaNacimiento;
     private String nacionalidad;
